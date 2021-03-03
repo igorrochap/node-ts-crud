@@ -36,6 +36,25 @@ class UserController {
             data: users
         })
     }
+
+    public async update(req: Request, res: Response) {
+        const id = req.params.id
+        const {name, email, age} = req.body
+        const userRepository = getCustomRepository(UserRepository)
+
+        // console.log(name, email, age)
+
+        const user = await userRepository.findOne(id)
+
+        user.name = name ? name : user.name
+        user.email = email ? email : user.email
+        user.age = age ? age : user.age
+
+        console.log(user)
+        await userRepository.save(user)
+        //return res.send()
+        return res.status(200).json(user)
+    }
 }
 
 export { UserController }
