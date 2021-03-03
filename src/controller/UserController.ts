@@ -42,18 +42,30 @@ class UserController {
         const {name, email, age} = req.body
         const userRepository = getCustomRepository(UserRepository)
 
-        // console.log(name, email, age)
-
         const user = await userRepository.findOne(id)
 
         user.name = name ? name : user.name
         user.email = email ? email : user.email
         user.age = age ? age : user.age
 
-        console.log(user)
         await userRepository.save(user)
-        //return res.send()
+
         return res.status(200).json(user)
+    }
+
+    public async delete(req: Request, res: Response) {
+        const id = req.params.id
+        const userRepository = getCustomRepository(UserRepository)
+
+        const user = await userRepository.findOne(id)
+
+        await userRepository.remove(user)
+
+        const users = await userRepository.find()
+        return res.status(200).json({
+            message: "Removed successfully",
+            data: users
+        })
     }
 }
 
